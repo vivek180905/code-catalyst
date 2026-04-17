@@ -84,58 +84,87 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
       set({ isRunning: true, error: null, output: "" });
 
       try {
-        const runtime = LANGUAGE_CONFIG[language].pistonRuntime;
-        const response = await fetch("https://emkc.org/api/v2/piston/execute", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            language: runtime.language,
-            version: runtime.version,
-            files: [{ content: code }],
-          }),
-        });
+    const languageMap: Record<string, number> = {
+  javascript: 63,
+  python: 71,
+  cpp: 54,
+  java: 62,
+};
 
-        const data = await response.json();
+const response = await fetch(
+  "https://ce.judge0.com/submissions?base64_encoded=false&wait=true",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      source_code: code,
+      language_id: languageMap[language],
+      stdin: "",
+    }),
+  }
+);
 
-        console.log("data back from piston:", data);
+const data = await response.json();
+
+console.log("data from judge0:", data);
+
+        // const data = await response.json();
+
+        // console.log("data back from piston:", data);
 
         // handle API-level erros
-        if (data.message) {
-          set({ error: data.message, executionResult: { code, output: "", error: data.message } });
-          return;
-        }
+        // if (data.message) {
+        //   set({ error: data.message, executionResult: { code, output: "", error: data.message } });
+        //   return;
+        // }
 
-        // handle compilation errors
-        if (data.compile && data.compile.code !== 0) {
-          const error = data.compile.stderr || data.compile.output;
-          set({
-            error,
-            executionResult: {
-              code,
-              output: "",
-              error,
-            },
-          });
-          return;
-        }
+        // // handle compilation errors
+        // if (data.compile && data.compile.code !== 0) {
+        //   const error = data.compile.stderr || data.compile.output;
+        //   set({
+        //     error,
+        //     executionResult: {
+        //       code,
+        //       output: "",
+        //       error,
+        //     },
+        //   });
+        //   return;
+        // }
 
-        if (data.run && data.run.code !== 0) {
-          const error = data.run.stderr || data.run.output;
-          set({
-            error,
-            executionResult: {
-              code,
-              output: "",
-              error,
-            },
-          });
-          return;
-        }
+        // if (data.run && data.run.code !== 0) {
+        //   const error = data.run.stderr || data.run.output;
+        //   set({
+        //     error,
+        //     executionResult: {
+        //       code,
+        //       output: "",
+        //       error,
+        //     },
+        //   });
+        //   return;
+        // }
 
-        // if we get here, execution was successful
-        const output = data.run.output;
+        // // if we get here, execution was successful
+        // const output = data.run.output;
+
+        const output =
+  data.stdout ||
+  data.stderr ||
+  data.compile_output ||
+  "No output";
+
+set({
+  output: output.trim(),
+  error: data.stderr || data.compile_output || null,
+  executionResult: {
+    code,
+    output: output.trim(),
+    error: data.stderr || data.compile_output || null,
+  },
+});
 
         set({
           output: output.trim(),
