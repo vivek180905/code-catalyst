@@ -3,8 +3,10 @@ import { api } from "../../../convex/_generated/api";
 import { Activity, Code2, Star, Timer, TrendingUp, Trophy, UserIcon, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 import { Id } from "../../../convex/_generated/dataModel";
-
-import { UserResource } from "@clerk/types";
+import { useUser } from "@clerk/nextjs";
+// import type { UserResource } from "@clerk/nextjs"; 
+// import type { UserResource } from "@clerk/types";
+// import { UserResource } from "@clerk/types";
 
 interface ProfileHeaderProps {
   userStats: {
@@ -27,8 +29,7 @@ interface ProfileHeaderProps {
     email: string;
     isPro: boolean;
   };
-  user: UserResource;
-}
+user: ReturnType<typeof useUser>["user"];}
 
 function ProfileHeader({ userStats, userData, user }: ProfileHeaderProps) {
   const starredSnippets = useQuery(api.snippets.getStarredSnippets);
@@ -87,7 +88,7 @@ function ProfileHeader({ userStats, userData, user }: ProfileHeaderProps) {
           blur-xl opacity-50 group-hover:opacity-75 transition-opacity"
           />
           <img
-            src={user.imageUrl}
+              src={user?.imageUrl || "/default-avatar.png"}
             alt="Profile"
             className="w-24 h-24 rounded-full border-4 border-gray-800/50 relative z-10 group-hover:scale-105 transition-transform"
           />

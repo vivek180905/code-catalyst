@@ -1,6 +1,10 @@
-import { SignedIn } from '@clerk/nextjs';
+"use client";
+// "use client";
+// import { useUser } from "@clerk/nextjs";
+// import { SignedIn } from '@clerk/nextjs';
 import { api } from '../../../convex/_generated/api';
-import { currentUser } from '@clerk/nextjs/server'
+// import { currentUser } from '@clerk/nextjs/server'
+import { useUser } from "@clerk/nextjs";
 import { ConvexHttpClient } from 'convex/browser';
 import { Blocks, Code2, Sparkles } from 'lucide-react';
 import Link from 'next/link';
@@ -10,14 +14,35 @@ import LanguageSelector from './LanguageSelector';
 import RunButton from './RunButton';
 import HeaderProfileBtn from './HeaderProfileBtn';
 
-async function Header() {
-    const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-    const user = await currentUser();
+ function Header() {
+  
+  const [convexUser, setConvexUser] = React.useState<any>(null);
+  const { isSignedIn } = useUser();
+    // const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+    const { user } = useUser();
+    // const user = await currentUser();
 
-    const cunvexUser = await convex.query(api.users.getUser ,{
-        userId : user?.id || "",
+    // const cunvexUser = await convex.query(api.users.getUser ,{
+    //     userId : user?.id || "",
+    // });
+
+    React.useEffect(() => {
+  const fetchUser = async () => {
+    if (!user?.id) return;
+
+    const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+
+    const data = await convex.query(api.users.getUser, {
+      userId: user.id,
     });
-    console.log("convex user in header" , cunvexUser);
+
+    setConvexUser(data);
+  };
+
+  fetchUser();
+}, [user]);
+
+    console.log("convex user in header" , convexUser );
   return (
        <div className="relative z-10 ">
         <div className = "flex items-center lg:justify-between justify-center bg-[#0a0a0f]/80 backdrop-blur-xl p-6 mb-4 rounded-lg" >
@@ -74,10 +99,10 @@ async function Header() {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-3">
             <ThemeSelector />
-            <LanguageSelector hasAccess={Boolean(cunvexUser?.isPro)} />
+            <LanguageSelector hasAccess={Boolean(convexUser?.isPro)} />
           </div>
 
-           {!cunvexUser?.isPro && (
+           {!convexUser?.isPro && (
             <Link
               href="/pricing"
               className="flex items-center gap-2 px-4 py-1.5 rounded-lg border border-amber-500/20 hover:border-amber-500/40 bg-gradient-to-r from-amber-500/10 
@@ -90,10 +115,11 @@ async function Header() {
               </span>
             </Link>
           )}
-
-           <SignedIn>
+             
+             {isSignedIn && (<RunButton />)}
+           {/* <SignedIn>
             <RunButton />
-          </SignedIn>
+          </SignedIn> */}
 
           <div className="pl-3 border-l border-gray-800">
             <HeaderProfileBtn />

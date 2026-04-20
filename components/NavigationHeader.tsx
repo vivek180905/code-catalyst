@@ -1,9 +1,13 @@
+"use client";
 import HeaderProfileBtn from "@/app/(root)/_components/HeaderProfileBtn";
-import { SignedOut } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 import { Blocks, Code2, Sparkles } from "lucide-react";
 import Link from "next/link";
 
+
+
 function NavigationHeader() {
+  const { isSignedIn } = useUser();
   return (
     <div className="sticky top-0 z-50 w-full border-b border-gray-800/50 bg-gray-950/80 backdrop-blur-xl backdrop-saturate-150">
       <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5" />
@@ -52,10 +56,9 @@ function NavigationHeader() {
               </span>
             </Link>
           </div>
-
           {/* right rection */}
           <div className="flex items-center gap-4">
-            <SignedOut>
+           {!isSignedIn && (
               <Link
                 href="/pricing"
                 className="flex items-center gap-2 px-4 py-1.5 rounded-lg border border-amber-500/20
@@ -68,7 +71,7 @@ function NavigationHeader() {
                   Pro
                 </span> 
               </Link>    
-            </SignedOut>
+            )}
 
             {/* profile button */}
             <HeaderProfileBtn />
