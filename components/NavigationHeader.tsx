@@ -1,21 +1,23 @@
 "use client";
 import HeaderProfileBtn from "@/app/(root)/_components/HeaderProfileBtn";
 import { useUser } from "@clerk/nextjs";
-import { Blocks, Code2, Sparkles } from "lucide-react";
+import { Blocks, Code2, Menu, Sparkles, X } from "lucide-react";
 import Link from "next/link";
-
-
+import { useState } from "react";
 
 function NavigationHeader() {
   const { isSignedIn } = useUser();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
     <div className="sticky top-0 z-50 w-full border-b border-gray-800/50 bg-gray-950/80 backdrop-blur-xl backdrop-saturate-150">
       <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5" />
       <div className="max-w-7xl mx-auto px-4">
         <div className="relative h-16 flex items-center justify-between">
-          <div className="flex items-center gap-4 min-w-0">
+          {/* Left section: Logo + Snippets */}
+          <div className="flex items-center gap-2 sm:gap-4 min-w-0">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 group relative">
+            <Link href="/" className="flex items-center gap-2 sm:gap-3 group relative shrink-0">
               {/* logo hover effect */}
               <div
                 className="absolute -inset-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg opacity-0 
@@ -27,7 +29,7 @@ function NavigationHeader() {
                 <Blocks className="w-6 h-6 text-blue-400 transform -rotate-6 group-hover:rotate-0 transition-transform duration-500" />
               </div>
 
-              <div className="relative">
+              <div className="relative hidden sm:block">
                 <span
                   className="block text-lg font-semibold bg-gradient-to-r
                  from-blue-400 via-blue-300 to-purple-400 text-transparent bg-clip-text"
@@ -35,30 +37,31 @@ function NavigationHeader() {
                   CodeCatalyst
                 </span>
                 <span className="block text-xs text-blue-400/60 font-medium">
-                  Interac Code Editor
+                  Interactive Code Editor
                 </span>
               </div>
             </Link>
 
-            {/* snippets Link */}
-           <Link
-  href="/snippets"
-  className="shrink-0 relative group flex items-center gap-2 px-4 py-1.5 rounded-lg text-gray-300 bg-gray-800/50 hover:bg-blue-500/10 
-  border border-gray-800 hover:border-blue-500/50 transition-all duration-300 shadow-lg overflow-hidden"
->
+            {/* snippets Link — hidden on very small screens, shown on sm+ */}
+            <Link
+              href="/snippets"
+              className="hidden sm:flex shrink-0 relative group items-center gap-2 px-4 py-1.5 rounded-lg text-gray-300 bg-gray-800/50 hover:bg-blue-500/10 
+              border border-gray-800 hover:border-blue-500/50 transition-all duration-300 shadow-lg overflow-hidden"
+            >
               <div
                 className="absolute inset-0 bg-gradient-to-r from-blue-500/10 
               to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity"
               />
               <Code2 className="w-4 h-4 relative z-10 group-hover:rotate-3 transition-transform" />
               <span className="text-sm font-medium relative z-10 group-hover:text-white transition-colors">
-                Snippetsing
+                Snippets
               </span>
             </Link>
           </div>
-          {/* right rection */}
-          <div className="flex items-center gap-4">
-           {!isSignedIn && (
+
+          {/* Right section — desktop */}
+          <div className="hidden sm:flex items-center gap-4">
+            {isSignedIn && (
               <Link
                 href="/pricing"
                 className="flex items-center gap-2 px-4 py-1.5 rounded-lg border border-amber-500/20
@@ -69,14 +72,53 @@ function NavigationHeader() {
                 <Sparkles className="w-4 h-4 text-amber-400 hover:text-amber-300" />
                 <span className="text-sm font-medium text-amber-400/90 hover:text-amber-300">
                   Pro
-                </span> 
-              </Link>    
+                </span>
+              </Link>
             )}
 
             {/* profile button */}
             <HeaderProfileBtn />
           </div>
+
+          {/* Mobile menu button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="sm:hidden relative z-10 p-2 rounded-lg bg-gray-800/50 border border-gray-700/50 text-gray-300 hover:text-white transition-colors"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
         </div>
+
+        {/* Mobile menu dropdown */}
+        {mobileMenuOpen && (
+          <div className="sm:hidden relative z-50 pb-4 pt-2 space-y-2 border-t border-gray-800/50">
+            <Link
+              href="/snippets"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-gray-300 bg-gray-800/50 hover:bg-blue-500/10 
+              border border-gray-800 hover:border-blue-500/50 transition-all duration-300"
+            >
+              <Code2 className="w-4 h-4" />
+              <span className="text-sm font-medium">Snippets</span>
+            </Link>
+
+            {isSignedIn && (
+              <Link
+                href="/pricing"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-amber-500/20
+                 bg-gradient-to-r from-amber-500/10 to-orange-500/10 transition-all duration-300"
+              >
+                <Sparkles className="w-4 h-4 text-amber-400" />
+                <span className="text-sm font-medium text-amber-400/90">Pro</span>
+              </Link>
+            )}
+
+            <div className="px-4 py-2">
+              <HeaderProfileBtn />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
