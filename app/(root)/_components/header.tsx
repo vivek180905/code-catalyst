@@ -1,9 +1,5 @@
 "use client";
-// "use client";
-// import { useUser } from "@clerk/nextjs";
-// import { SignedIn } from '@clerk/nextjs';
 import { api } from '../../../convex/_generated/api';
-// import { currentUser } from '@clerk/nextjs/server'
 import { useUser } from "@clerk/nextjs";
 import { ConvexHttpClient } from 'convex/browser';
 import { Blocks, Code2, Sparkles } from 'lucide-react';
@@ -18,13 +14,7 @@ import HeaderProfileBtn from './HeaderProfileBtn';
   
   const [convexUser, setConvexUser] = React.useState<any>(null);
   const { isSignedIn } = useUser();
-    // const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
     const { user } = useUser();
-    // const user = await currentUser();
-
-    // const cunvexUser = await convex.query(api.users.getUser ,{
-    //     userId : user?.id || "",
-    // });
 
     React.useEffect(() => {
   const fetchUser = async () => {
@@ -42,10 +32,9 @@ import HeaderProfileBtn from './HeaderProfileBtn';
   fetchUser();
 }, [user]);
 
-    console.log("convex user in header" , convexUser );
   return (
        <div className="relative z-10 ">
-        <div className = "flex items-center lg:justify-between justify-center bg-[#0a0a0f]/80 backdrop-blur-xl p-6 mb-4 rounded-lg" >
+        <div className="flex flex-wrap items-center lg:justify-between justify-center bg-[#0a0a0f]/80 backdrop-blur-xl p-3 sm:p-6 mb-4 rounded-lg gap-3 sm:gap-4">
        
        <div className="hidden lg:flex items-center gap-8">
                   <Link href="/" className="flex items-center gap-3 group relative">
@@ -96,8 +85,8 @@ import HeaderProfileBtn from './HeaderProfileBtn';
           </nav>
          </div>
 
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-4 justify-center">
+          <div className="flex items-center gap-2 sm:gap-3">
             <ThemeSelector />
             <LanguageSelector hasAccess={Boolean(convexUser?.isPro)} />
           </div>
@@ -105,7 +94,7 @@ import HeaderProfileBtn from './HeaderProfileBtn';
            {!convexUser?.isPro && (
             <Link
               href="/pricing"
-              className="flex items-center gap-2 px-4 py-1.5 rounded-lg border border-amber-500/20 hover:border-amber-500/40 bg-gradient-to-r from-amber-500/10 
+              className="hidden sm:flex items-center gap-2 px-4 py-1.5 rounded-lg border border-amber-500/20 hover:border-amber-500/40 bg-gradient-to-r from-amber-500/10 
                 to-orange-500/10 hover:from-amber-500/20 hover:to-orange-500/20 
                 transition-all duration-300"
             >
@@ -117,11 +106,8 @@ import HeaderProfileBtn from './HeaderProfileBtn';
           )}
              
              {isSignedIn && (<RunButton />)}
-           {/* <SignedIn>
-            <RunButton />
-          </SignedIn> */}
 
-          <div className="pl-3 border-l border-gray-800">
+          <div className="pl-2 sm:pl-3 border-l border-gray-800">
             <HeaderProfileBtn />
           </div> 
         </div>

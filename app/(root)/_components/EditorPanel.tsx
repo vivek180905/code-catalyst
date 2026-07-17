@@ -49,9 +49,9 @@ function EditorPanel() {
 
   return (
     <div className="relative">
-      <div className="relative bg-[#12121a]/90 backdrop-blur rounded-xl border border-white/[0.05] p-6">
+      <div className="relative bg-[#12121a]/90 backdrop-blur rounded-xl border border-white/[0.05] p-3 sm:p-6">
         {/* Header */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-wrap items-center justify-between mb-4 gap-3">
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#1e1e2e] ring-1 ring-white/5">
               <Image src={"/" + language + ".png"} alt="Logo" width={24} height={24} />
@@ -63,7 +63,7 @@ function EditorPanel() {
           </div>
           <div className="flex items-center gap-3">
             {/* Font Size Slider */}
-            <div className="flex items-center gap-3 px-3 py-2 bg-[#1e1e2e] rounded-lg ring-1 ring-white/5">
+            <div className="hidden sm:flex items-center gap-3 px-3 py-2 bg-[#1e1e2e] rounded-lg ring-1 ring-white/5">
               <TypeIcon className="size-4 text-gray-400" />
               <div className="flex items-center gap-3">
                 <input
@@ -105,10 +105,10 @@ function EditorPanel() {
         </div>
 
         {/* Editor  */}
-        <div className="relative group rounded-xl overflow-hidden ring-1 ring-white/[0.05]">
+        <div className="relative group rounded-xl overflow-hidden ring-1 ring-white/[0.05] h-[350px] sm:h-[500px] lg:h-[600px]">
           {clerk.loaded && (
             <Editor
-              height="600px"
+              height="100%"
               language={LANGUAGE_CONFIG[language].monacoLanguage}
               onChange={handleEditorChange}
               theme={theme}

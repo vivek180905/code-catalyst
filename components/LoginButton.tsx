@@ -15,4 +15,3 @@ function LoginButton() {
   );
 }
 export default LoginButton;
-//new update
