@@ -47,12 +47,14 @@ export interface CodeEditorState {
   fontSize: number;
   editor: MonacoEditor.IStandaloneCodeEditor | null;
   executionResult: ExecutionResult | null;
+  stdin: string;
 
   setEditor: (editor:  MonacoEditor.IStandaloneCodeEditor) => void;
   getCode: () => string;
   setLanguage: (language: string) => void;
   setTheme: (theme: string) => void;
   setFontSize: (fontSize: number) => void;
+  setStdin: (stdin: string) => void;
   runCode: () => Promise<void>;
 }
 

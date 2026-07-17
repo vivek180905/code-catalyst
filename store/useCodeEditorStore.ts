@@ -36,6 +36,7 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
     error: null,
     editor: null,
     executionResult: null,
+    stdin: "",
 
     getCode: () => get().editor?.getValue() || "",
 
@@ -56,6 +57,10 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
       set({ fontSize });
     },
 
+    setStdin: (stdin: string) => {
+      set({ stdin });
+    },
+
     setLanguage: (language: string) => {
       // Save current language code before switching
       const currentCode = get().editor?.getValue();
@@ -73,7 +78,7 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
     },
 
     runCode: async () => {
-      const { language, getCode } = get();
+      const { language, getCode, stdin } = get();
       const code = getCode();
 
       if (!code) {
@@ -101,7 +106,7 @@ const response = await fetch(
     body: JSON.stringify({
       source_code: code,
       language_id: languageMap[language],
-      stdin: "",
+      stdin: stdin,
     }),
   }
 );

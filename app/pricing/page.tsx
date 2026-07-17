@@ -5,7 +5,7 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import NavigationHeader from "@/components/NavigationHeader";
 import ProPlanView from "./_components/ProPlanView";
-import { ENTERPRISE_FEATURES, FEATURES } from "./_constants";
+import { ENTERPRISE_FEATURES, PRO_FEATURES } from "./_constants";
 import UpgradeButton from "./_components/UpgradeButton";
 import LoginButton from "@/components/LoginButton";
 import { Check, Sparkles, X, Zap } from "lucide-react";
@@ -50,7 +50,7 @@ export default function PricingPage() {
                 <div className="mb-6 sm:mb-8">
                   <h3 className="text-xl font-semibold text-white mb-2">Free</h3>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-4xl sm:text-5xl font-bold text-white">$0</span>
+                    <span className="text-4xl sm:text-5xl font-bold text-white">₹0</span>
                     <span className="text-gray-500">/month</span>
                   </div>
                   <p className="text-gray-400 mt-3 text-sm">Perfect for getting started with code editing</p>
@@ -91,7 +91,7 @@ export default function PricingPage() {
                     <div className="flex-shrink-0 w-5 h-5 rounded-full bg-gray-800/50 flex items-center justify-center border border-gray-700/30">
                       <X className="w-3 h-3 text-gray-600" />
                     </div>
-                    <span className="text-gray-600 text-sm">Advanced AI features</span>
+                    <span className="text-gray-600 text-sm">Priority code execution</span>
                   </div>
                 </div>
 
@@ -128,7 +128,7 @@ export default function PricingPage() {
                 <div className="mb-6 sm:mb-8">
                   <h3 className="text-xl font-semibold text-white mb-2">Pro</h3>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text">$9</span>
+                    <span className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text">₹49</span>
                     <span className="text-gray-500">/month</span>
                   </div>
                   <p className="text-gray-400 mt-3 text-sm">For serious developers who want it all</p>
@@ -136,26 +136,10 @@ export default function PricingPage() {
 
                 <div className="space-y-4 mb-8">
                   <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Everything in Free, plus:</p>
-                  {FEATURES.development.map((feature) => (
+                  {PRO_FEATURES.map((feature) => (
                     <div key={feature} className="flex items-center gap-3">
                       <div className="flex-shrink-0 w-5 h-5 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/30">
                         <Check className="w-3 h-3 text-blue-400" />
-                      </div>
-                      <span className="text-gray-300 text-sm">{feature}</span>
-                    </div>
-                  ))}
-                  {FEATURES.collaboration.map((feature) => (
-                    <div key={feature} className="flex items-center gap-3">
-                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-purple-500/10 flex items-center justify-center border border-purple-500/30">
-                        <Check className="w-3 h-3 text-purple-400" />
-                      </div>
-                      <span className="text-gray-300 text-sm">{feature}</span>
-                    </div>
-                  ))}
-                  {FEATURES.deployment.map((feature) => (
-                    <div key={feature} className="flex items-center gap-3">
-                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/30">
-                        <Check className="w-3 h-3 text-emerald-400" />
                       </div>
                       <span className="text-gray-300 text-sm">{feature}</span>
                     </div>
