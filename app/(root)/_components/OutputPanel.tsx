@@ -1,13 +1,14 @@
 "use client";
 
 import { useCodeEditorStore } from "@/store/useCodeEditorStore";
-import { AlertTriangle, CheckCircle, Clock, Copy, Terminal } from "lucide-react";
+import { AlertTriangle, CheckCircle, Clock, Copy, Terminal, Keyboard, ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 import RunningCodeSkeleton from "./RunningCodeSkeleton";
 
 function OutputPanel() {
-  const { output, error, isRunning } = useCodeEditorStore();
+  const { output, error, isRunning, stdin, setStdin } = useCodeEditorStore();
   const [isCopied, setIsCopied] = useState(false);
+  const [showInput, setShowInput] = useState(false);
 
   const hasContent = error || output;
 
@@ -20,7 +21,7 @@ function OutputPanel() {
   };
 
   return (
-    <div className="relative bg-[#181825] rounded-xl p-4 ring-1 ring-gray-800/50">
+    <div className="relative bg-[#181825] rounded-xl p-4 ring-1 ring-gray-800/50 flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
@@ -30,29 +31,54 @@ function OutputPanel() {
           <span className="text-sm font-medium text-gray-300">Output</span>
         </div>
 
-        {hasContent && (
+        <div className="flex items-center gap-2">
           <button
-            onClick={handleCopy}
+            onClick={() => setShowInput(!showInput)}
             className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs text-gray-400 hover:text-gray-300 bg-[#1e1e2e] 
             rounded-lg ring-1 ring-gray-800/50 hover:ring-gray-700/50 transition-all"
           >
-            {isCopied ? (
-              <>
-                <CheckCircle className="w-3.5 h-3.5" />
-                Copied!
-              </>
-            ) : (
-              <>
-                <Copy className="w-3.5 h-3.5" />
-                Copy
-              </>
-            )}
+            <Keyboard className="w-3.5 h-3.5" />
+            Custom Input
+            {showInput ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
           </button>
-        )}
+          {hasContent && (
+            <button
+              onClick={handleCopy}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs text-gray-400 hover:text-gray-300 bg-[#1e1e2e] 
+              rounded-lg ring-1 ring-gray-800/50 hover:ring-gray-700/50 transition-all"
+            >
+              {isCopied ? (
+                <>
+                  <CheckCircle className="w-3.5 h-3.5" />
+                  Copied!
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3.5 h-3.5" />
+                  Copy
+                </>
+              )}
+            </button>
+          )}
+        </div>
       </div>
 
+      {/* Custom Input Area (Collapsible) */}
+      {showInput && (
+        <div className="mb-4">
+          <textarea
+            value={stdin}
+            onChange={(e) => setStdin(e.target.value)}
+            placeholder="Enter custom input here..."
+            className="w-full bg-[#1e1e2e]/50 backdrop-blur-sm border border-[#313244] rounded-xl p-3 
+            text-sm text-gray-300 font-mono focus:outline-none focus:ring-1 focus:ring-blue-500/50 
+            resize-y min-h-[100px]"
+          />
+        </div>
+      )}
+
       {/* Output Area */}
-      <div className="relative">
+      <div className="relative flex-1">
         <div
           className="relative bg-[#1e1e2e]/50 backdrop-blur-sm border border-[#313244] 
         rounded-xl p-4 h-[350px] sm:h-[500px] lg:h-[600px] overflow-auto font-mono text-sm"
