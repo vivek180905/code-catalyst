@@ -97,16 +97,16 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
 };
 
 const response = await fetch(
-  "https://ce.judge0.com/submissions?base64_encoded=false&wait=true",
+  "https://ce.judge0.com/submissions?base64_encoded=true&wait=true",
   {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      source_code: code,
+      source_code: btoa(code),
       language_id: languageMap[language],
-      stdin: stdin,
+      stdin: btoa(stdin),
     }),
   }
 );
@@ -115,72 +115,40 @@ const data = await response.json();
 
 console.log("data from judge0:", data);
 
-        // const data = await response.json();
+        const decodeBase64 = (str: string | null) => {
+          if (!str) return "";
+          try {
+            return atob(str);
+          } catch (e) {
+            return str;
+          }
+        };
 
-        // console.log("data back from piston:", data);
-
-        // handle API-level erros
-        // if (data.message) {
-        //   set({ error: data.message, executionResult: { code, output: "", error: data.message } });
-        //   return;
-        // }
-
-        // // handle compilation errors
-        // if (data.compile && data.compile.code !== 0) {
-        //   const error = data.compile.stderr || data.compile.output;
-        //   set({
-        //     error,
-        //     executionResult: {
-        //       code,
-        //       output: "",
-        //       error,
-        //     },
-        //   });
-        //   return;
-        // }
-
-        // if (data.run && data.run.code !== 0) {
-        //   const error = data.run.stderr || data.run.output;
-        //   set({
-        //     error,
-        //     executionResult: {
-        //       code,
-        //       output: "",
-        //       error,
-        //     },
-        //   });
-        //   return;
-        // }
-
-        // // if we get here, execution was successful
-        // const output = data.run.output;
+        const parsedStdout = decodeBase64(data.stdout);
+        const parsedStderr = decodeBase64(data.stderr);
+        const parsedCompile = decodeBase64(data.compile_output);
 
         const output =
-  data.stdout ||
-  data.stderr ||
-  data.compile_output ||
-  "No output";
+          parsedStdout ||
+          parsedStderr ||
+          parsedCompile ||
+          data.message ||
+          data.error ||
+          "No output";
 
-set({
-  output: output.trim(),
-  error: data.stderr || data.compile_output || null,
-  executionResult: {
-    code,
-    output: output.trim(),
-    error: data.stderr || data.compile_output || null,
-  },
-});
-//re uploading the code to local storage after execution in case user made changes while code was running
+        const errorMsg = parsedStderr || parsedCompile || data.message || data.error || null;
 
         set({
           output: output.trim(),
-          error: null,
+          error: errorMsg ? errorMsg.trim() : null,
           executionResult: {
             code,
             output: output.trim(),
-            error: null,
+            error: errorMsg ? errorMsg.trim() : null,
           },
         });
+        
+        //re uploading the code to local storage after execution in case user made changes while code was running
       } catch (error) {
         console.log("Error running code:", error);
         set({
