@@ -118,7 +118,12 @@ console.log("data from judge0:", data);
         const decodeBase64 = (str: string | null) => {
           if (!str) return "";
           try {
-            return atob(str);
+            const binaryStr = atob(str);
+            const bytes = new Uint8Array(binaryStr.length);
+            for (let i = 0; i < binaryStr.length; i++) {
+              bytes[i] = binaryStr.charCodeAt(i);
+            }
+            return new TextDecoder("utf-8").decode(bytes);
           } catch (e) {
             return str;
           }
