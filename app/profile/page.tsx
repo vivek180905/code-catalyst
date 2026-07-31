@@ -256,7 +256,7 @@ function ProfilePage() {
                             <div className="flex items-center justify-between text-sm text-gray-400">
                               <div className="flex items-center gap-2">
                                 <Clock className="w-4 h-4" />
-                                <span>{new Date(snippet._creationTime).toLocaleDateString()}</span>
+                                <span>{new Date(snippet.createdAt ?? snippet._creationTime).toLocaleDateString()}</span>
                               </div>
                               <ChevronRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
                             </div>

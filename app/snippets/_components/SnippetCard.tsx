@@ -72,7 +72,7 @@ function SnippetCard({ snippet }: { snippet: Snippet }) {
                   </span>
                   <div className="flex items-center gap-2 text-xs text-gray-500">
                     <Clock className="size-3" />
-                    {new Date(snippet._creationTime).toLocaleDateString()}
+                    {new Date(snippet.createdAt ?? snippet._creationTime).toLocaleDateString()}
                   </div>
                 </div>
               </div>
