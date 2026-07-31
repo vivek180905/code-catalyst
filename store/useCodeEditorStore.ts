@@ -90,11 +90,17 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
 
       try {
     const languageMap: Record<string, number> = {
-  javascript: 63,
-  python: 71,
-  cpp: 54,
-  java: 62,
-};
+      javascript: 63,
+      python: 71,
+      cpp: 54,
+      java: 62,
+      typescript: 74,
+      go: 60,
+      rust: 73,
+      csharp: 51,
+      ruby: 72,
+      swift: 83,
+    };
 
 const response = await fetch(
   "https://ce.judge0.com/submissions?base64_encoded=true&wait=true",
